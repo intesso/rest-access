@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "role/scope based REST access control",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/intesso/rest-access.git"
+  },
   "scripts": {
     "lint": "standard",
     "format": "standard --fix",
