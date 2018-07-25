@@ -108,3 +108,7 @@ npm test
 ## license
 
 MIT
+
+## credits
+
+extracted from: https://github.com/glintcms/glintcms-starter-glintcms/blob/master/local_modules/page-auth-access/access.js
