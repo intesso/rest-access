@@ -6,6 +6,7 @@ const token = jwt.sign({}, 'shared_secret')
 const tokenNotValid = jwt.sign({}, 'bla')
 const tokenApiRead = jwt.sign({ scope: ['api:read'] }, 'shared_secret')
 const tokenApiWrite = jwt.sign({ scope: ['api:write'] }, 'shared_secret')
+const tokenApiRookie = jwt.sign({ scope: ['api:rookie'] }, 'shared_secret')
 const tokenByer = jwt.sign({ scope: ['byer'] }, 'shared_secret')
 const baseUrl = 'http://localhost:8080'
 
@@ -94,6 +95,16 @@ test('should not have access with byer token to /api/info/bye', t => {
   superagent
     .get(`${baseUrl}/api/info/bye`)
     .set('Authorization', `Bearer ${tokenByer}`)
+    .catch(e => {
+      t.true(e.status.should.be.exactly(403))
+      t.end()
+    })
+})
+
+test('should not have access with rookie token to /api/info/bye', t => {
+  superagent
+    .get(`${baseUrl}/api/info/bye`)
+    .set('Authorization', `Bearer ${tokenApiRookie}`)
     .catch(e => {
       t.true(e.status.should.be.exactly(403))
       t.end()

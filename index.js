@@ -47,18 +47,15 @@ function access () {
         // path (2.argument)
         if (!wildcard(rule[1], path, pathSegmentSplitPattern).length) continue // with next rule
 
-        // where (4.argument) optional
-        if (rule.length > 3) {
-          return next(new TypeError('access rule `where` argument 4, is not yet implemented'))
-        }
-
         // permission (3.argument)
         // so method and path matched, now the permission has to match to, otherwise access is denied -> new NotPermittedError('access not permitted')
-        return next(hasPermission(userPermission, rule[2]))
+        let matches = hasPermission(userPermission, rule[2], rule[3])
+        if (rule[3] && !matches) continue
+        return next(matches)
       }
 
       // no matching access definition
-      return next(new NotPermittedError('access not permitted'))
+      return next(new NotPermittedError('no matching access rule found'))
     }
   }
 
@@ -68,22 +65,22 @@ function access () {
   }
 
   // general permission query function
-  function hasPermission (userPermission, routePermission) {
+  function hasPermission (userPermission, routePermission, block) {
     // permission (3.argument)
     // so method and path matched, now the permission has to match to, otherwise access is denied -> new NotPermittedError('access not permitted')
     if (routePermission === '*') return undefined // with next rule
-    if (!userPermission) return new NotPermittedError('access not permitted')
+    if (!userPermission) return new NotPermittedError('not authenticated')
     if (typeof userPermission === 'string') userPermission = userPermission.split(termSplitPattern)
     if (typeof routePermission === 'string') routePermission = routePermission.split(termSplitPattern)
     if (!Array.isArray(routePermission)) {
       return new TypeError('wrong permission format: ' + routePermission)
     }
-    const allow = routePermission.some(p => {
+    const matches = routePermission.some(p => {
       if (p === '*') return true
       if (wildcard(p, userPermission, permissionSchemeSplitPattern).length) return true
       return false
     })
-    if (!allow) return new NotPermittedError('access not permitted')
+    if ((!block && !matches) || (block && matches)) return new NotPermittedError('access not permitted')
     return undefined
   }
 

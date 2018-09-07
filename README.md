@@ -15,9 +15,10 @@ const jwt = require('express-jwt')
 const access = require('rest-access')
 
 access([
+  ['*', '/api/*', 'api:rookie', true],
   [['POST', 'PUT', 'DELETE'], '/api/*', 'api:write,admin:*'],
   [['POST', 'PUT', 'DELETE'], '/api/secret/*', 'normal-admin'],
-  [['GET'], '/api/*', 'api:read'],
+  ['GET', '/api/*', 'api:read'],
   [['GET', 'POST'], '/*', '*']
 ])
 
@@ -42,9 +43,9 @@ app.get('/hello', (req, res) => res.send('welcome to the unrestricted area'))
 
 ## api
 
-#### access(roles)
+#### access(rules)
 
-This function lets you define the access ruleas all at once:
+This function lets you define the access rules all at once:
 
 ```js
 access([
@@ -54,6 +55,7 @@ access([
   ['*', '/signin/*', 'manage'],
   ['*', '/account/password', 'manage'],
   ['*', '/account/delete', 'manage'],
+  ['*', '/*', 'view', true],
   ['*', '/upload/*', 'edit'],
   ['GET', '/translate/*', 'edit,manage'],
   ['GET', '/filemanager/*', 'edit,manage'],
@@ -65,14 +67,20 @@ access([
 ])
 ```
 
-#### access(methods, path, role)
+#### access(methods, path, role[, block])
 
-
-Use This method if you want to define access rules in different places. examples:
+Use This method if you want to define a single access rules a specific place. examples:
 
 ```js
-access(['GET', 'POST'], '/ */glint / role/* ', 'admin:*')
-access('POST', '/ */glint/* /*', 'edit:glint')
+access(['GET', 'POST'], '/*/glint/role/* ', 'admin:*')
+access('POST', '/*/glint/*', 'edit:glint')
+```
+
+The fourth argument is optional. If the fourth argument is "truthy" (boolean:true or string), it means that this role is blocked (instead of allowed) for the given methods and path.
+Therefore in the following example, the Role `read:glint` is blocked to `POST` the given path. 
+
+```js
+access('POST', '/*/glint/*', 'read:glint', true)
 ```
 
 #### members

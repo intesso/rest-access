@@ -4,6 +4,7 @@ const jwt = require('express-jwt')
 const access = require('../index')
 
 access([
+  ['*', '/api/*', 'api:rookie', true],
   [['POST', 'PUT', 'DELETE'], '/api/*', 'api:write'],
   [['GET'], '/api/hello', 'api:read'],
   [['GET'], '/api/bye', 'byer'],
@@ -26,7 +27,10 @@ let sayHi = (req, res) => res.send('hi')
 let sayBye = (req, res) => res.send('bye')
 
 app.get('/api/hello', (req, res) => res.send(hello))
-app.post('/api/hello', (req, res) => { hello = req.body; res.send(201) })
+app.post('/api/hello', (req, res) => {
+  hello = req.body
+  res.send(201)
+})
 app.get('/api/hi', sayHi)
 app.get('/api/bye', sayBye)
 app.get('/api/info/hi', sayHi)
