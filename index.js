@@ -84,8 +84,12 @@ function access () {
     return undefined
   }
 
+  function getRules () {
+    JSON.parse(JSON.stringify(rules))
+  }
+
   // adding rules function
-  function addRules () {
+  function restAccessRules () {
     const args = [].slice.call(arguments)
     if (args.length === 1 && Array.isArray(args[0])) {
       const entries = args[0]
@@ -102,9 +106,10 @@ function access () {
       rules.push(args)
     }
   }
-  addRules.middleware = middleware
-  addRules.restrict = restrict
-  return addRules
+  restAccessRules.middleware = middleware
+  restAccessRules.restrict = restrict
+  restAccessRules.getRules = getRules
+  return restAccessRules
 }
 
 /**
