@@ -85,7 +85,7 @@ function access () {
   }
 
   function getRules () {
-    JSON.parse(JSON.stringify(rules))
+    return JSON.parse(JSON.stringify(rules))
   }
 
   // adding rules function
