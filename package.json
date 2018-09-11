@@ -12,7 +12,8 @@
     "format": "standard --fix",
     "test:server": "node examples/server.js",
     "test:client": "node examples/client.js",
-    "test": "run-p -r \"test:server\" \"test:client\""
+    "test:integration": "run-p -r \"test:server\" \"test:client\"",
+    "test": "node tests/test-access.js"
   },
   "author": "Andi Neck",
   "license": "MIT",

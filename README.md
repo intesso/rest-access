@@ -6,6 +6,8 @@
 npm i -S rest-access
 ```
 
+> `rest-access` can be used to restrict access to resources. it can be used as a standalone solution or as a express/connect middleware.
+
 ## usage
 
 ```js
@@ -86,7 +88,28 @@ access('POST', '/*/glint/*', 'read:glint', true)
 #### members
 
 
-**app.midleware**
+**access.isBlocked**
+this function can be used to check if the access to the required endpoint is blocked.
+`isBlocked(method, path, permission)`
+
+Given this definition:
+
+```js
+access([
+  ['GET', '/api/*', 'api:*'],
+  ['GET,POST,PUT,DELETE', '/api/*', 'api:write'],
+])
+```
+
+The following result is expected:
+
+```js
+access.isBlocked('GET', '/api/hello', 'api:read') // -> returns `false`
+access.isBlocked('POST', '/api/message', 'api:write') // -> returns `false`
+access.isBlocked('PUT', '/api/message/today', 'api:read') // -> returns `'access not permitted'`
+```
+
+**access.midleware**
 middleware function
 
 example usage: looks for user permission under req.permission
@@ -94,12 +117,20 @@ example usage: looks for user permission under req.permission
 app.use(access.middleware({ permissionProperty: 'permission' }))
 ```
 
-**app.restrict**
+**access.restrict**
 restrict single route
 
 example usage: looks for user permission under req.permission
 ```js
 app.get('/my/home', access.restrict('api:*'), (req, res) => res.send('restricted api access'))
+```
+
+**access.getRules**
+use this function to return a copy of the existing rules.
+
+example:
+```js
+restAccess.getRules().forEach(rule => console.log(rule.join(' ')));
 ```
 
 #### extends
@@ -109,8 +140,15 @@ Example call: `req.userCan('admin:*')`
 
 ## test
 
+
+**run unittests**
 ```sh
 npm test
+```
+
+**run integrationtests**
+```sh
+npm test:integration
 ```
 
 ## license
