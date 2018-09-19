@@ -100,3 +100,13 @@ test('with edit,insert,delete,manage it should be allowed to change state', t =>
   t.false(access.isBlocked('DELETE', '/ajax/a/b', 'delete'))
   t.end()
 })
+
+test('role x-* should match role x', t => {
+  access([
+    ['GET', '/signup/*', 'tool-*']
+  ])
+  t.false(access.isBlocked('GET', '/signup', 'tool'))
+  t.false(access.isBlocked('GET', '/signup/me', 'tool-admin'))
+  t.false(access.isBlocked('GET', '/signup/you', 'tool-superadmin'))
+  t.end()
+})
