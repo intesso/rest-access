@@ -110,3 +110,13 @@ test('role x-* should match role x', t => {
   t.false(access.isBlocked('GET', '/signup/you', 'tool-superadmin'))
   t.end()
 })
+
+test('role x* should not match role x and xt', t => {
+  access([
+    ['GET', '/signup/*', 'tool*']
+  ])
+  t.true(access.isBlocked('GET', '/signup', 'tool'))
+  t.true(access.isBlocked('GET', '/signup/me', 'tooladmin'))
+  t.true(access.isBlocked('GET', '/signup/you', 'tool-superadmin'))
+  t.end()
+})
