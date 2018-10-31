@@ -111,6 +111,27 @@ test('role x-* should match role x', t => {
   t.end()
 })
 
+test('role x-y-* should match role x-y and x-y-z', t => {
+  access([
+    ['GET', '/signup/*', 'tool-hero-*']
+  ])
+  t.true(access.isBlocked('GET', '/signup/me', 'tool'))
+  t.false(access.isBlocked('GET', '/signup/me', 'tool-hero'))
+  t.false(access.isBlocked('GET', '/signup/me', 'tool-hero-admin'))
+  t.false(access.isBlocked('GET', '/signup/me', 'tool-hero-superadmin'))
+  t.end()
+})
+
+test('role x-y should not match role x-y-z', t => {
+  access([
+    ['GET', '/signup/*', 'tool-hero']
+  ])
+  t.true(access.isBlocked('GET', '/signup/me', 'tool'))
+  t.false(access.isBlocked('GET', '/signup/me', 'tool-hero'))
+  t.true(access.isBlocked('GET', '/signup/me', 'tool-hero-admin'))
+  t.end()
+})
+
 test('role x* should not match role x and xt', t => {
   access([
     ['GET', '/signup/*', 'tool*']
