@@ -1,6 +1,6 @@
 {
   "name": "rest-access",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "description": "role/scope based REST access control",
   "main": "index.js",
   "repository": {
