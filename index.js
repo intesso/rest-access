@@ -24,7 +24,7 @@ function access () {
 
       // if access is allowed call `next()`, otherwise call `next(new NotPermittedError())`
       const reason = isBlocked(method, path, permission)
-      next(reason ? new NotPermittedError(`rest-access: ${method} ${path} with permission: ${permission}, reason ${reason}`) : undefined)
+      next(reason ? new NotPermittedError(`rest-access: '${method} ${path}' with permission: ${permission}, reason: ${reason}`) : undefined)
     }
   }
 
